@@ -42,8 +42,14 @@ if #args>=1 then
 	term.clear()
 	term.setCursorPos(1,1)
 	
-	print ("Now playing : " .. song.header.name .. " by " .. song.header.author) 
+	print ("Now playing : " .. song.header.name ~= "" and song.header.name or args[1] .. " by " .. song.header.author~="" and song.header.author or "unknown")
+	if song.header.originalAuthor ~= "" then
+		print ("Originally by " .. song.header.originalAuthor)
+	end
 	
+	if song.header.importedName ~= "" then
+		print("Imported from " .. song.header.importedName)
+	end
 	local current_tick = -1
 	
 	local len = song.header.length / song.header.tempo

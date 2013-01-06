@@ -122,6 +122,11 @@ namespace NBSConverter
 
                 notes += "}";
 
+                if(name == "")
+                {
+                    name = args[1].Replace("nbs", "");
+                }
+
                 File.WriteAllText(name+".lua","{header="+header+",notes="+notes+"}");
             }
             else
