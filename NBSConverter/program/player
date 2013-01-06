@@ -1,0 +1,74 @@
+local args={...}
+
+local note_blocks = {}
+
+for k,v in pairs(rs.getSides()) do
+	if peripheral.getType(v) == "note" then
+		note_blocks[#note_blocks+1] = peripheral.wrap(v)
+	end
+end
+
+function transformInstrument(inst)
+	if inst==0 then
+		return 0
+	elseif inst == 1 then
+		return 4
+	elseif inst == 2 then
+		return 1
+	elseif inst == 3 then
+		return 2 
+	elseif inst == 4 then
+		return 3
+	end
+end
+
+function pad(s)
+	s = tostring(s)
+	if not s:find(".",1,true) then
+		s = s .. ".0"
+	end
+	
+	return s
+end
+
+if #args>=1 then
+	local f = fs.open(args[1],"r")
+	local content = f.readAll()
+	f.close()
+	
+	local song = textutils.unserialize(content)
+	local tempo = 1 / song.header.tempo -- tempo is in ticks / sec
+
+	term.clear()
+	term.setCursorPos(1,1)
+	
+	print ("Now playing : " .. song.header.name .. " by " .. song.header.author) 
+	
+	local current_tick = -1
+	
+	local len = song.header.length / song.header.tempo
+	
+	for i = 1, #song.notes do
+		local key = song.notes[i].key
+		local inst = song.notes[i].instrument
+		local layer = song.notes[i].layer
+		
+		if not note_blocks[layer+1] then
+			print("Truncating..")
+		else
+			note_blocks[layer+1].playNote(transformInstrument(inst),key)
+		end
+		
+		if song.notes[i+1].tick ~= song.notes[i].tick then
+			current_tick = current_tick + song.notes[i].jumps
+			
+			term.setCursorPos(1,2)
+			print(pad(current_tick / song.header.tempo) .. "/" .. len )
+		
+			os.sleep(i~=#song.notes and (tempo * song.notes[i+1].jumps) or 0)
+		end
+	end
+	
+else
+	print("Usage : player <filename>")
+end
