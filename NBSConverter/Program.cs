@@ -89,7 +89,7 @@ namespace NBSConverter
                     {
                         jumps = m_reader.ReadInt16();
                         if (jumps == 0) { break; }
-                        layer += jumps;
+                        layer++;
 
                         byte inst = m_reader.ReadByte();
                         sbyte key = m_reader.ReadSByte();
@@ -111,8 +111,9 @@ namespace NBSConverter
                                      ",timesig=" + timeSig.ToString() +
                                      ",importedName=\"" + importedName + "\"}";
 
-                string notes = "{";
                 int i = 1;
+                string notes = "{";
+                
                 foreach (Note n in m_notes)
                 {
                     notes += "[" + i.ToString() + "]={tick=" + n.m_tick.ToString() + ",layer=" + n.m_layer.ToString() + ",key=" + n.m_key.ToString() + ",instrument=" + n.m_inst.ToString() +",jumps=" + n.m_jumps.ToString() + "},";

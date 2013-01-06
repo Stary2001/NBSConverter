@@ -59,13 +59,13 @@ if #args>=1 then
 			note_blocks[layer+1].playNote(transformInstrument(inst),key)
 		end
 		
-		if song.notes[i+1].tick ~= song.notes[i].tick then
+		if i~=#song.notes and song.notes[i+1].tick ~= song.notes[i].tick then
 			current_tick = current_tick + song.notes[i].jumps
 			
 			term.setCursorPos(1,2)
 			print(pad(current_tick / song.header.tempo) .. "/" .. len )
 		
-			os.sleep(i~=#song.notes and (tempo * song.notes[i+1].jumps) or 0)
+			os.sleep(tempo * song.notes[i+1].jumps)
 		end
 	end
 	
