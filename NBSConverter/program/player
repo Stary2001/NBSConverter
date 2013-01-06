@@ -42,13 +42,17 @@ if #args>=1 then
 	term.clear()
 	term.setCursorPos(1,1)
 	
+	local pos = 2
+	
 	print ("Now playing : " .. song.header.name ~= "" and song.header.name or args[1] .. " by " .. song.header.author~="" and song.header.author or "unknown")
 	if song.header.originalAuthor ~= "" then
 		print ("Originally by " .. song.header.originalAuthor)
+		pos = pos + 1
 	end
 	
 	if song.header.importedName ~= "" then
 		print("Imported from " .. song.header.importedName)
+		pos = pos + 1
 	end
 	local current_tick = -1
 	
@@ -68,7 +72,7 @@ if #args>=1 then
 		if i~=#song.notes and song.notes[i+1].tick ~= song.notes[i].tick then
 			current_tick = current_tick + song.notes[i].jumps
 			
-			term.setCursorPos(1,2)
+			term.setCursorPos(1,pos)
 			print(pad(current_tick / song.header.tempo) .. "/" .. len )
 		
 			os.sleep(tempo * song.notes[i+1].jumps)
