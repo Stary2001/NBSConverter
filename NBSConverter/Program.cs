@@ -124,7 +124,7 @@ namespace NBSConverter
 
                 if(name == "")
                 {
-                    name = args[1].Replace("nbs", "");
+                   name = args[0].Replace(".nbs", "");
                 }
 
                 File.WriteAllText(name+".lua","{header="+header+",notes="+notes+"}");
